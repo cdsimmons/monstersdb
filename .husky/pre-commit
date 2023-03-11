@@ -1,0 +1,6 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# exec >/dev/tty 2>&1 # Shows colors in console but not working well in SourceTree for me right now
+
+npm run check
