@@ -7,6 +7,10 @@ interface IndexPageProps {
   monsters: APIMonster[];
 }
 
+
+
+export const config = { amp: true }
+
 const IndexPage = ({ monsters }: IndexPageProps) => {
 	const {
     register,
@@ -26,6 +30,11 @@ const IndexPage = ({ monsters }: IndexPageProps) => {
 	const searchEnvironments = [...new Set(monsters.map(m => m.environment))].sort((a, b) => a.localeCompare(b));
 
 	// TODO... break out components, search dropdown and monster item
+	// amp-bind... seems like it will let me manage to state of the form
+	// If I nest if expressions a lot, maybe amp-bind isnt right
+	// amp-script... when things get more complex, it seems like a wrapper and can only affects components inside it
+	// Saw 2 jobs after a short search asking for AMP experience... so maybe lets just build this with AMP and move on
+	// Maybe, lets run some tests... we can do it AMP way, and we can do it non-AMP way, and see which actually loads/runs faster
 
   return (
     <Main
@@ -38,71 +47,69 @@ const IndexPage = ({ monsters }: IndexPageProps) => {
     >
       <div role="search" className="bg-gray-700">
 				<div className="container max-w-3xl mx-auto p-10">
-					<form>
-						<div className="relative flex items-center w-full h-12 rounded-lg focus-within:shadow-lg bg-white overflow-hidden">
-							<div className="grid place-items-center h-full w-12 text-gray-300">
-								<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-								</svg>
-							</div>
-
-							<input
-								className="peer h-full w-full outline-none text-sm text-gray-700 pr-2"
-								type="text"
-								id="sword"
-								placeholder="Search something.." 
-								{...register('sword')} 
-								onChange={(e) => {
-									register('sword').onChange(e);
-									handleFieldChange()
-								}}
-							/>
+					<div className="relative flex items-center w-full h-12 rounded-lg focus-within:shadow-lg bg-white overflow-hidden">
+						<div className="grid place-items-center h-full w-12 text-gray-300">
+							<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+							</svg>
 						</div>
 
-						<div className="relative flex items-center w-full">
-							<label htmlFor="type" className="sr-only">Select by type</label>
-							<select 
-								id="type" 
-								className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-								<option selected>Type</option>
-								{searchTypes.map((s) => {
-									return (<option value={s}>{s}</option>)
-								})}
-							</select>
+						<input
+							className="peer h-full w-full outline-none text-sm text-gray-700 pr-2"
+							type="text"
+							id="sword"
+							placeholder="Search something.." 
+							{...register('sword')} 
+							onChange={(e) => {
+								register('sword').onChange(e);
+								handleFieldChange()
+							}}
+						/>
+					</div>
 
-							<label htmlFor="type" className="sr-only">Select by size</label>
-							<select 
-								id="size" 
-								className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-								<option selected>Size</option>
-								{searchSizes.map((s) => {
-									return (<option value={s}>{s}</option>)
-								})}
-							</select>
-						</div>
+					<div className="relative flex items-center w-full">
+						<label htmlFor="type" className="sr-only">Select by type</label>
+						<select 
+							id="type" 
+							className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+							<option key="none">Type</option>
+							{searchTypes.map((s, i) => {
+								return (<option value={s} key={s+i}>{s}</option>)
+							})}
+						</select>
 
-						<div className="relative flex items-center w-full">
-							<label htmlFor="type" className="sr-only">Select by alignment</label>
-							<select 
-								id="type" 
-								className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-								<option selected>Alignment</option>
-								{searchAlignments.map((s) => {
-									return (<option value={s}>{s}</option>)
-								})}
-							</select>
+						<label htmlFor="type" className="sr-only">Select by size</label>
+						<select 
+							id="size" 
+							className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+							<option key="none">Size</option>
+							{searchSizes.map((s, i) => {
+								return (<option value={s} key={s+i}>{s}</option>)
+							})}
+						</select>
+					</div>
 
-							<label htmlFor="type" className="sr-only">Select by environment</label>
-							<select 
-								id="type" 
-								className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-								<option selected>Environment</option>
-								{searchEnvironments.map((s) => {
-									return (<option value={s}>{s}</option>)
-								})}
-							</select>
-						</div>
-					</form>
+					<div className="relative flex items-center w-full">
+						<label htmlFor="type" className="sr-only">Select by alignment</label>
+						<select 
+							id="type" 
+							className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+							<option key="none">Alignment</option>
+							{searchAlignments.map((s, i) => {
+								return (<option value={s} key={s+i}>{s}</option>)
+							})}
+						</select>
+
+						<label htmlFor="type" className="sr-only">Select by environment</label>
+						<select 
+							id="type" 
+							className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+							<option key="none">Environment</option>
+							{searchEnvironments.map((s, i) => {
+								return (<option value={s} key={s+i}>{s}</option>)
+							})}
+						</select>
+					</div>
 				</div>
 			</div>
 			
@@ -134,10 +141,13 @@ const IndexPage = ({ monsters }: IndexPageProps) => {
 								return (
 									<tr key={m.key}>
 										<td className="px-5 py-3 border-b border-gray-200 bg-white text-sm w-0 pr-0">
-											<img className="rounded-full object-contain"
+											<amp-img className="rounded-full object-contain"
 												src={m.imageUrl}
 												alt={`Thumbnail of ${m.name}`} 
-												style={{minWidth: 40, height: 40}}/>
+												style={{minWidth: 40, height: 40}}
+												height="40"
+												width="40"
+												layout="responsive" />
 										</td>
 										<td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
 											<p className="text-gray-900 whitespace-no-wrap">

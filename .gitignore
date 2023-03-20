@@ -23,6 +23,7 @@ public/sitemap-*.xml
 .swc/
 
 # production
+public/global.css
 /build
 
 # misc

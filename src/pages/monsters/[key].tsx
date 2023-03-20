@@ -7,7 +7,6 @@ interface MonsterPageProps {
 }
 
 const MonsterPage = ({ monster }: MonsterPageProps) => {
-
   return (
     <Main
       meta={
