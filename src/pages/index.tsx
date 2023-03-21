@@ -186,7 +186,7 @@ const IndexPage = ({ apiMonsters }: IndexPageProps) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const res = await fetch(`${getBaseUrl(req)}/api/monsters`, {
+  const res = await fetch(`${getBaseUrl(req)}/api/monsters`, { 
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'

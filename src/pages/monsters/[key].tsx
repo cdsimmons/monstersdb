@@ -4,14 +4,16 @@ import Main from '@/templates/Main';
 import { APIMonster } from '@/types/monster';
 import { AppConfig } from '@/utils/AppConfig';
 import { getBaseUrl } from '@/utils/helpers';
-import ReactMarkdown from 'react-markdown';
-import rehypeRaw from 'rehype-raw';
+// @ts-ignore: Has no type library
+import { Markup } from 'react-render-markup';
 
 interface MonsterPageProps {
-  monster: APIMonster;
+  apiMonster: APIMonster;
 }
 
-const MonsterPage = ({ monster }: MonsterPageProps) => {
+const MonsterPage = ({ apiMonster }: MonsterPageProps) => {
+	const monster = apiMonster;
+
   return (
     <Main
       meta={
@@ -39,7 +41,7 @@ const MonsterPage = ({ monster }: MonsterPageProps) => {
 				<div className="container max-w-6xl mx-auto p-10 flex gap-8">
 					<div className="w-2/5"></div>
 					<div className="w-3/5" style={{minHeight: 400}}>
-						<ReactMarkdown children={monster.description} rehypePlugins={[rehypeRaw]} />
+						<Markup markup={monster.description} />
 					</div>
 				</div>
 			</div>
@@ -56,11 +58,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query }) => 
       'Content-Type': 'application/json'
     },
   });
-  const monster = await res.json();
+  const apiMonster = await res.json();
 
   return {
     props: { 
-			monster
+			apiMonster
 		},
   };
 }

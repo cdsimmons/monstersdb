@@ -28,7 +28,7 @@ const Main = (props: MainProps) => (
 		</header>
 
 		<div>
-      <main className="content text-xl text-gray-800">{props.children}</main>
+      <main className="content text-xl text-gray-800" data-testid="main">{props.children}</main>
 
       <footer role="site-footer" className="bg-gray-800 text-white py-8 text-center text-sm">
         © Copyright {new Date().getFullYear()} {AppConfig.title}.
