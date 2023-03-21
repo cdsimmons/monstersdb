@@ -1,9 +1,10 @@
 import Meta from '@/layouts/Meta';
 import Main from '@/templates/Main';
 import { APIMonster } from '@/types/monster';
-import { capitalize } from '@/utils/helpers';
+import { capitalize, getBaseUrl } from '@/utils/helpers';
 import { FieldValues, useForm, UseFormRegister } from 'react-hook-form';
-import Link from 'next/link'
+import { GetServerSideProps } from 'next';
+import Link from 'next/link';
 import { useState } from 'react';
 import { AppConfig } from '@/utils/AppConfig';
 
@@ -184,8 +185,8 @@ const IndexPage = ({ apiMonsters }: IndexPageProps) => {
   );
 };
 
-export const getServerSideProps = async () => {
-  const res = await fetch(`http://localhost:3000/api/monsters`, {
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const res = await fetch(`${getBaseUrl(req)}/api/monsters`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'

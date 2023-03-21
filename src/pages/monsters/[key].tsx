@@ -1,7 +1,9 @@
+import { GetServerSideProps } from 'next';
 import Meta from '@/layouts/Meta';
 import Main from '@/templates/Main';
 import { APIMonster } from '@/types/monster';
 import { AppConfig } from '@/utils/AppConfig';
+import { getBaseUrl } from '@/utils/helpers';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 
@@ -46,9 +48,9 @@ const MonsterPage = ({ monster }: MonsterPageProps) => {
 };
 
 
-export const getServerSideProps = async (context: any) => {
-	const key = context.query.key;
-  const res = await fetch(`http://localhost:3000/api/monsters/${key}`, {
+export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
+	const key = query.key;
+  const res = await fetch(`${getBaseUrl(req)}/api/monsters/${key}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
