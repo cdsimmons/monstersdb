@@ -3,16 +3,16 @@ import Meta from '@/layouts/Meta';
 import Main from '@/templates/Main';
 import { APIMonster } from '@/types/monster';
 import { AppConfig } from '@/utils/AppConfig';
-import { getBaseUrl } from '@/utils/helpers';
 // @ts-ignore: Has no type library
 import { Markup } from 'react-render-markup';
+import clientPromise from '@/utils/mongodb';
 
 interface MonsterPageProps {
-  apiMonster: APIMonster;
+  stringifiedMonster: string;
 }
 
-const MonsterPage = ({ apiMonster }: MonsterPageProps) => {
-	const monster = apiMonster;
+const MonsterPage = ({ stringifiedMonster }: MonsterPageProps) => {
+	const monster: APIMonster = JSON.parse(stringifiedMonster);
 
   return (
     <Main
@@ -50,19 +50,20 @@ const MonsterPage = ({ apiMonster }: MonsterPageProps) => {
 };
 
 
-export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const key = query.key;
-  const res = await fetch(`${getBaseUrl(req)}/api/monsters/${key}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-  });
-  const apiMonster = await res.json();
+	if (!key) { return {props: {}}; }
+
+	const client = await clientPromise;
+	const db = client.db(process.env.MONGODB_DB);
+
+	const monster = await db
+		.collection('monsters')
+		.findOne({key: key});
 
   return {
     props: { 
-			apiMonster
+			stringifiedMonster: JSON.stringify(monster)
 		},
   };
 }

@@ -1,12 +1,13 @@
 import Meta from '@/layouts/Meta';
 import Main from '@/templates/Main';
 import { APIMonster } from '@/types/monster';
-import { capitalize, getBaseUrl } from '@/utils/helpers';
+import { capitalize } from '@/utils/helpers';
 import { FieldValues, useForm, UseFormRegister } from 'react-hook-form';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useState } from 'react';
 import { AppConfig } from '@/utils/AppConfig';
+import clientPromise from '@/utils/mongodb';
 
 
 // Not being used anywhere else atm, so just leaving here
@@ -39,10 +40,11 @@ const SearchSelect = ({fieldName, fieldOptions, register, handleFieldChange}: Se
 
 
 interface IndexPageProps {
-  apiMonsters: APIMonster[];
+  stringifiedMonsters: string;
 }
-const IndexPage = ({ apiMonsters }: IndexPageProps) => {
-	const [monsters, setMonsters] = useState(apiMonsters);
+const IndexPage = ({ stringifiedMonsters }: IndexPageProps) => {
+	const monsters: APIMonster[] = JSON.parse(stringifiedMonsters);
+	const [filteredMonsters, setFilteredMonsters] = useState(monsters);
 	const {
     register,
 		getValues
@@ -50,7 +52,7 @@ const IndexPage = ({ apiMonsters }: IndexPageProps) => {
 
 	const handleFieldChange = () => {
 		const searchValues = getValues();
-		const filteredMonsters = apiMonsters.filter((m) => {
+		const nextFilteredMonsters = monsters.filter((m) => {
 			const matchesSword = !searchValues.sword || m.name.includes(searchValues.sword);
 			const matchesType = !searchValues.type || searchValues.type === m.type;
 			const matchesSize = !searchValues.size || searchValues.size === m.size;
@@ -59,13 +61,13 @@ const IndexPage = ({ apiMonsters }: IndexPageProps) => {
 
 			return matchesSword && matchesType && matchesSize && matchesAlignment && matchesEnvironment;
 		});
-		setMonsters(filteredMonsters);
+		setFilteredMonsters(nextFilteredMonsters);
 	}
 
-	const searchTypes = [...new Set(apiMonsters.map(m => m.type))].sort((a, b) => a.localeCompare(b));
-	const searchSizes = [...new Set(apiMonsters.map(m => m.size))].sort((a, b) => b.localeCompare(a));
-	const searchAlignments = [...new Set(apiMonsters.map(m => m.alignment))].sort((a, b) => a.localeCompare(b));
-	const searchEnvironments = [...new Set(apiMonsters.map(m => m.environments).flat(1))].sort((a, b) => a.localeCompare(b));
+	const searchTypes = [...new Set(monsters.map(m => m.type))].sort((a, b) => a.localeCompare(b));
+	const searchSizes = [...new Set(monsters.map(m => m.size))].sort((a, b) => b.localeCompare(a));
+	const searchAlignments = [...new Set(monsters.map(m => m.alignment))].sort((a, b) => a.localeCompare(b));
+	const searchEnvironments = [...new Set(monsters.map(m => m.environments).flat(1))].sort((a, b) => a.localeCompare(b));
 
   return (
     <Main
@@ -136,7 +138,7 @@ const IndexPage = ({ apiMonsters }: IndexPageProps) => {
 							</tr>
 						</thead>
 						<tbody>
-							{monsters && monsters.length > 0 && monsters.map((m) => {
+							{filteredMonsters && filteredMonsters.length > 0 && filteredMonsters.map((m) => {
 								return (
 									<tr key={m.key} className="hover:bg-gray-50 hover:cursor-pointer relative">
 										<td className="px-5 py-3 border-b border-gray-200 text-sm w-0 pr-0">
@@ -185,21 +187,19 @@ const IndexPage = ({ apiMonsters }: IndexPageProps) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-	console.log('fetching monsters');
-	console.log(getBaseUrl(req));
-	console.log(`${getBaseUrl(req)}/api/monsters`);
-  const res = await fetch(`${getBaseUrl(req)}/api/monsters`, { 
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-  });
-  const apiMonsters = await res.json();
+export const getServerSideProps: GetServerSideProps = async () => {
+  const client = await clientPromise;
+	const db = client.db(process.env.MONGODB_DB);
+
+	const dbMonsters = await db
+		.collection('monsters')
+		.find({})
+		.sort({ name: 1 })
+		.toArray();
 
   return {
     props: { 
-			apiMonsters
+			stringifiedMonsters: JSON.stringify(dbMonsters)
 		},
   };
 }

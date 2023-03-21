@@ -5,6 +5,10 @@ const nextJest = require('next/jest');
 const customJestConfig = {
   testEnvironment: "jest-environment-jsdom",
   verbose: true,
+	globals: {
+		TextEncoder: require('util').TextEncoder,
+		TextDecoder: require('util').TextDecoder
+	}
 };
 
 const createJestConfig = nextJest({

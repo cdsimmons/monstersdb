@@ -22,7 +22,7 @@ describe('Index page', () => {
 				approved: true
 			};
 
-      render(<MonsterPage apiMonster={testMonster}/>);
+      render(<MonsterPage stringifiedMonster={JSON.stringify(testMonster)}/>);
 
 			const main = screen.getByTestId('main');
 

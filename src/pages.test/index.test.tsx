@@ -1,4 +1,3 @@
-
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 
@@ -10,7 +9,7 @@ import IndexPage from '@/pages/index';
 describe('Index page', () => {
   describe('Render method', () => {
     it('should have search', () => {
-      render(<IndexPage apiMonsters={[]}/>);
+      render(<IndexPage stringifiedMonsters="[]"/>);
 
       const search = screen.getByRole('search');
 
