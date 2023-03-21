@@ -4,10 +4,6 @@ a {
   @apply text-blue-700;
 }
 
-a:hover {
-  @apply border-b-2 border-blue-700;
-}
-
 @tailwind components;
 
 @tailwind utilities;
@@ -15,4 +11,13 @@ a:hover {
 
 .content ul {
   @apply my-6;
+}
+
+
+.border-mask {
+	padding: 60px;
+	background: white;
+	mask: url(/assets/images/stroke.svg);
+	mask-size: 100% 100%;
+	mask-position: center;
 }

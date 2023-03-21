@@ -11,7 +11,7 @@ declare global {
 }
 
 type MyAppProps = AppProps & {
-	css: string;
+	css?: string;
 };
 
 const MyApp = ({ Component, pageProps, css }: MyAppProps) => {
@@ -19,16 +19,17 @@ const MyApp = ({ Component, pageProps, css }: MyAppProps) => {
 
 	return (
 		<>
-			{isAmp && <style jsx global>{css}</style>}
+			{isAmp && css && <style jsx global>{css}</style>}
 			<Component {...pageProps} />
 		</>
 	)
 };
 
-MyApp.getInitialProps = async () => {
-  const res = await fetch('http://localhost:3000/global.css');
-	const css = await res.text();
-  return { css }
-}
+// Might compare performance between AMP and regular NextJS later, however have to do a workaround - https://github.com/vercel/next.js/issues/10549
+// MyApp.getServerSideProps = async () => {
+//   const res = await fetch('http://localhost:3000/global.css');
+// 	const css = await res.text();
+//   return { css }
+// }
 
 export default MyApp;

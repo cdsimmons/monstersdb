@@ -3,7 +3,9 @@ import https from 'https';
 import querystring from 'querystring';
 import cheerio from 'cheerio';
 import clientPromise from './src/utils/mongodb';
+import { capitalize } from './src/utils/helpers';
 import { Monster } from './src/types/monster';
+import { scrapeBlacklist, scrapeOverrides } from './scrape-overrides';
 
 const scrape = async () => {
 	if (!process.env.POPULATE_PATH) { return; }
@@ -32,16 +34,11 @@ const scrape = async () => {
 		if (!detailsMixed) { return; }
 		const size = detailsMixed[0] as Monster['size'];
 		const type = (capitalize(detailsMixed[1]) || 'Unknown') as Monster['type'];
-		const alignment = capitalize(details[1]) || 'Unknown';
-		// Challenge Rating? Looks tricky to scrape >.<
+		const alignment = capitalize(details[details.length-1]) || 'Unaligned';
+		
+		// TODO... add CR? Not sure if it fits with a monsters database, since its not supposed to be aimed at DnD
 
-		// Environment could be added... basically, I would store all of the monsters somewhere here, with overrides, one of the overrides would be environment... just have to figure out how I want to do it...
-		// Preferred environment? Since a monster could have many environments... Forest/Mountains/Caves/Dungeon/Ocean/Beach/Desert/Any
-
-		// Have to fix alignment scrape for Yuan etc
-		// Have to add CR
-
-		if (!key || !description || !name || !imageUrl || !size) { continue; } // Only adding monsters with key info
+		if (!key || !description || !name || !imageUrl || !size || scrapeBlacklist.includes(key)) { continue; } // Only adding monsters with key info
 
 		const monster: Monster = {
 			key,
@@ -51,10 +48,13 @@ const scrape = async () => {
 			type,
 			size,
 			alignment,
-			environment: 'Any',
+			environments: ['Dungeon'],
 			source: 'scrape',
-			approved: true
+			approved: true,
+			...scrapeOverrides[key]
 		}
+
+		monster.environments = monster.environments.sort((a, b) => a.localeCompare(b));
 
 		monsters.push(monster);
 		console.log(link);
@@ -123,11 +123,6 @@ const getUrlContents = async (path?: string): Promise<string> => {
 		request.write(postData);
 		request.end();
 	});
-}
-
-const capitalize = (string?: string) => {
-	if (!string) { return; }
-	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 // Init!

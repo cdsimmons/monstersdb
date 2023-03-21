@@ -1,3 +1,4 @@
+type Environments = 'Plains' | 'Forest' | 'Mountains' | 'Cave' | 'Dungeon' | 'Ocean' | 'Beach' | 'Desert';
 export interface Monster {
   key: string;
   name: string;
@@ -6,7 +7,7 @@ export interface Monster {
 	type: 'Unknown' | 'Humanoid' | 'Aberration' | 'Beast' | 'Celestial' | 'Construct' | 'Dragon' | 'Elemental' | 'Fey' | 'Fiend' | 'Giant' | 'Monstrosity' | 'Ooze' | 'Plant' | 'Undead';
 	size: 'Unknown' | 'Tiny' | 'Small' | 'Medium' | 'Large' | 'Huge' | 'Gargantuan';
 	alignment: string;
-	environment: 'Any' | 'Forest' | 'Mountains' | 'Caves' | 'Dungeon' | 'Ocean' | 'Beach' | 'Desert';
+	environments: Environments[];
 	source: 'scrape' | 'user';
 	approved: boolean;
 }
