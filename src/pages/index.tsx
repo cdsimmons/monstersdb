@@ -7,7 +7,7 @@ import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useState } from 'react';
 import { AppConfig } from '@/utils/AppConfig';
-import clientPromise from '@/utils/mongodb';
+import { connectToDatabase } from '@/utils/mongodb';
 
 
 // Not being used anywhere else atm, so just leaving here
@@ -18,6 +18,7 @@ interface SearchSelectProps {
 	handleFieldChange: () => void
 }
 const SearchSelect = ({fieldName, fieldOptions, register, handleFieldChange}: SearchSelectProps) => {
+
 	return (
 		<>
 			<label htmlFor="type" className="sr-only">Select by {fieldName}</label>
@@ -180,7 +181,7 @@ const IndexPage = ({ stringifiedMonsters }: IndexPageProps) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const client = await clientPromise;
+  const client = await connectToDatabase();
 	const db = client.db(process.env.MONGODB_DB);
 
 	const dbMonsters = await db

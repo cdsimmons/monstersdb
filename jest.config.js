@@ -43,6 +43,7 @@ const jestConfig = async () => {
 			},
 		},
 		testEnvironment: 'jest-environment-jsdom',
+		setupFilesAfterEnv: ['<rootDir>/__mocks__/setupTests.js'],
   };
 };
 

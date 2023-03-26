@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app';
-import { useAmp } from 'next/amp'
+import { useAmp } from 'next/amp';
 import '../styles/global.css';
+import { SessionProvider } from 'next-auth/react';
 
 declare global {
   namespace JSX {
@@ -18,10 +19,10 @@ const MyApp = ({ Component, pageProps, css }: MyAppProps) => {
 	const isAmp = useAmp();
 
 	return (
-		<>
+		<SessionProvider session={pageProps.session}>
 			{isAmp && css && <style jsx global>{css}</style>}
 			<Component {...pageProps} />
-		</>
+		</SessionProvider>
 	)
 };
 

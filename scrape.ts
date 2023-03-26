@@ -2,7 +2,7 @@ require('dotenv').config();
 import https from 'https';
 import querystring from 'querystring';
 import cheerio from 'cheerio';
-import clientPromise from './src/utils/mongodb';
+import { connectToDatabase } from './src/utils/mongodb';
 import { capitalize } from './src/utils/helpers';
 import { Monster } from './src/types/monster';
 import { scrapeBlacklist, scrapeOverrides } from './scrape-overrides';
@@ -60,7 +60,7 @@ const scrape = async () => {
 		console.log(link);
 	}
 
-	const client = await clientPromise;
+	const client = await connectToDatabase();
 	const db = await client.db(process.env.MONGODB_DB);
 	const colMonsters = await db.collection('monsters');
 

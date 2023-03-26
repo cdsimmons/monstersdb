@@ -5,7 +5,7 @@ import { APIMonster } from '@/types/monster';
 import { AppConfig } from '@/utils/AppConfig';
 // @ts-ignore: Has no type library
 import { Markup } from 'react-render-markup';
-import clientPromise from '@/utils/mongodb';
+import { connectToDatabase } from '@/utils/mongodb';
 
 interface MonsterPageProps {
   stringifiedMonster: string;
@@ -54,7 +54,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const key = query.key;
 	if (!key) { return {props: {}}; }
 
-	const client = await clientPromise;
+	const client = await connectToDatabase();
 	const db = client.db(process.env.MONGODB_DB);
 
 	const monster = await db

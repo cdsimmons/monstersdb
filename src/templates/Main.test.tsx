@@ -2,6 +2,9 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 
 import Main from './Main';
+// @ts-ignore
+import { mockSession } from '@/../__mocks__/mockSession';
+
 
 describe('Main template', () => {
   describe('Render method', () => {
