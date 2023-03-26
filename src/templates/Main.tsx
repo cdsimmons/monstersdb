@@ -21,8 +21,10 @@ const Main = (props: MainProps) => (
 						<h3 className="text-base font-bold tracking-normal leading-tight ml-5 hidden lg:block">{AppConfig.title}</h3>
 					</Link>
 				</div>
-				<div className="h-full xl:flex items-center justify-end hidden">
-					
+				<div className="h-full xl:flex items-center justify-end">
+					<Link href="/login">
+						Login
+					</Link>
 				</div>
 			</div>
 		</header>

@@ -16,6 +16,7 @@ const Meta = (props: MetaProps) => {
   return (
     <>
       <Head>
+				<meta name="viewport" content="width=device-width" />
         <meta charSet="UTF-8" key="charset" />
         <link
           rel="apple-touch-icon"

@@ -116,71 +116,63 @@ const IndexPage = ({ stringifiedMonsters }: IndexPageProps) => {
 			
 			<div className="container mx-auto px-6 my-10">
 				<div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
-					<table className="min-w-full leading-normal">
-						<thead>
-							<tr>
-								<th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider pr-0"></th>
-								<th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-									Name
-								</th>
-								<th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-									Type
-								</th>
-								<th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-									Size
-								</th>
-								<th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-									Alignment
-								</th>
-								<th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-									Environments
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							{filteredMonsters && filteredMonsters.length > 0 && filteredMonsters.map((m) => {
-								return (
-									<tr key={m.key} className="hover:bg-gray-50 hover:cursor-pointer relative">
-										<td className="px-5 py-3 border-b border-gray-200 text-sm w-0 pr-0">
-											<Link 
-												href={`/monsters/${m.key}`} 
-												className="absolute h-full w-full top-0" 
-												aria-label={`Link to ${m.name}`}/>{/* Cant wrap table row in an anchor, this seems like best UX option */}
-											<img className="rounded-full object-contain"
-												src={m.imageUrl}
-												alt={`Thumbnail of ${m.name}`} 
-												style={{minWidth: 40, height: 40}} />
-										</td>
-										<td className="px-5 py-2 border-b border-gray-200 text-sm">
-											<p className="text-gray-900 whitespace-no-wrap">
-												{m.name}
-											</p>
-										</td>
-										<td className="px-5 py-3 border-b border-gray-200 text-sm">
-											<p className="text-gray-900 whitespace-no-wrap">
-												{m.type}
-											</p>
-										</td>
-										<td className="px-5 py-3 border-b border-gray-200 text-sm">
-											<p className="text-gray-900 whitespace-no-wrap">
-												{m.size}
-											</p>
-										</td>
-										<td className="px-5 py-3 border-b border-gray-200 text-sm">
-											<p className="text-gray-900 whitespace-no-wrap">
-												{m.alignment}
-											</p>
-										</td>
-										<td className="px-5 py-3 border-b border-gray-200 text-sm">
-											<p className="text-gray-900 whitespace-no-wrap">
-												{m.environments.join(', ')}
-											</p>
-										</td>
-									</tr>
-								)
-							})}
-						</tbody>
-					</table>
+					<div className="table bg-white min-w-full leading-normal">
+						<div className="table-row">
+							<div className="table-cell align-middle px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider pr-0"></div>
+							<div className="table-cell align-middle px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+								Name
+							</div>
+							<div className="table-cell align-middle px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+								Type
+							</div>
+							<div className="table-cell align-middle px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+								Size
+							</div>
+							<div className="table-cell align-middle px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+								Alignment
+							</div>
+							<div className="table-cell align-middle px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+								Environments
+							</div>
+						</div>
+						{filteredMonsters && filteredMonsters.length > 0 && filteredMonsters.map((m) => {
+							return (
+								<Link href={`/monsters/${m.key}`} aria-label={`Link to ${m.name}`} className="hover:bg-gray-50 table-row relative" key={m.key}>
+									<div className="table-cell align-middle px-5 py-3 border-b border-gray-200 text-sm w-0 pr-0">
+										<img className="rounded-full object-contain"
+											src={m.imageUrl}
+											alt={`Thumbnail of ${m.name}`} 
+											style={{minWidth: 40, height: 40}} />
+									</div>
+									<div className="table-cell align-middle px-5 py-2 border-b border-gray-200 text-sm">
+										<p className="text-gray-900 whitespace-no-wrap">
+											{m.name}
+										</p>
+									</div>
+									<div className="table-cell align-middle px-5 py-3 border-b border-gray-200 text-sm">
+										<p className="text-gray-900 whitespace-no-wrap">
+											{m.type}
+										</p>
+									</div>
+									<div className="table-cell align-middle px-5 py-3 border-b border-gray-200 text-sm">
+										<p className="text-gray-900 whitespace-no-wrap">
+											{m.size}
+										</p>
+									</div>
+									<div className="table-cell align-middle px-5 py-3 border-b border-gray-200 text-sm">
+										<p className="text-gray-900 whitespace-no-wrap">
+											{m.alignment}
+										</p>
+									</div>
+									<div className="table-cell align-middle px-5 py-3 border-b border-gray-200 text-sm">
+										<p className="text-gray-900 whitespace-no-wrap">
+											{m.environments.join(', ')}
+										</p>
+									</div>
+								</Link>
+							)
+						})}
+					</div>
 				</div>
 			</div>
     </Main>
